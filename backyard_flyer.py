@@ -76,7 +76,7 @@ class BackyardFlyer(Drone):
 
     def velocity_callback(self):
         """Act upon new velocity information.
-        
+
         When getting close to landing position: disarm.
 
         This triggers when `MsgID.LOCAL_VELOCITY` is received
@@ -98,19 +98,17 @@ class BackyardFlyer(Drone):
         This triggers when `MsgID.STATE` is received
         and self.armed and self.guided contain new data.
         """
-        if not self.in_mission:
-            return
-
-        if self.flight_state == States.MANUAL:
-            self.arming_transition()
-        elif self.flight_state == States.ARMING:
-            self.takeoff_transition()
-        elif self.flight_state == States.DISARMING:
-            self.manual_transition()
+        if self.in_mission:
+            if self.flight_state == States.MANUAL:
+                self.arming_transition()
+            elif self.flight_state == States.ARMING:
+                self.takeoff_transition()
+            elif self.flight_state == States.DISARMING:
+                self.manual_transition()
 
     def calculate_box(self):
         """Calculate box of waypoints.
-        
+
         1. Return waypoints to fly a box.
         """
         waypoints = []
@@ -127,7 +125,7 @@ class BackyardFlyer(Drone):
 
     def arming_transition(self):
         """Arm the quadrotor.
-        
+
         1. Take control of the drone.
         2. Pass an arming command.
         3. Set the home location to current position.
@@ -140,7 +138,7 @@ class BackyardFlyer(Drone):
 
     def takeoff_transition(self):
         """Take off with quadrotor.
-        
+
         1. Set target_position altitude to 3.0m.
         2. Command a takeoff to 3.0m.
         3. Transition to the TAKEOFF state.
@@ -160,7 +158,7 @@ class BackyardFlyer(Drone):
 
     def waypoint_transition(self):
         """Navigate quadrotor towards a waypoint.
-    
+
         1. Command the next waypoint position.
         2. Transition to WAYPOINT state.
         """
@@ -178,7 +176,7 @@ class BackyardFlyer(Drone):
 
     def landing_transition(self):
         """Land the quadrotor.
-        
+
         1. Command the drone to land.
         2. Transition to the LANDING state.
         """
@@ -188,7 +186,7 @@ class BackyardFlyer(Drone):
 
     def disarming_transition(self):
         """Disarm the quadrotor.
-        
+
         1. Command the drone to disarm.
         2. Transition to the DISARMING state.
         """
@@ -198,7 +196,7 @@ class BackyardFlyer(Drone):
 
     def manual_transition(self):
         """Transition to manual mode.
-        
+
         1. Release control of the drone.
         2. Stop the connection (and telemetry log).
         3. End the mission.

@@ -18,10 +18,8 @@ ALTITUDE_ERROR = 0.05
 DEFAULT_HEADING_IN_RADIANS = 0.0
 DOWN_TO_ALTITUDE_CONVERSION = -1.0
 GLOBAL_DISARMING_ALTITUDE = 0.1
-# GOAL_LATITUDE = 37.794
-# GOAL_LONGITUDE = -122.396
-GOAL_LATITUDE = 37.79681984
-GOAL_LONGITUDE = -122.40010668
+# GOAL_LATITUDE = 37.79681984
+# GOAL_LONGITUDE = -122.40010668
 GROUND_LEVEL_ALTITUDE = 0.0
 LOCAL_DISARMING_ALTITUDE = 0.01
 MAXIMUM_LANDING_VELOCITY = 1.0
@@ -227,7 +225,17 @@ if __name__ == "__main__":
     parser.add_argument(
         "--host", type=str, default="127.0.0.1", help="host address, i.e. '127.0.0.1'",
     )
+    parser.add_argument(
+        "--longitude", type=float, default="-122.396", help="Goal longitude",
+    )
+    parser.add_argument(
+        "--latitude", type=float, default="37.794", help="Goal latitude",
+    )
     args = parser.parse_args()
+
+    # Read arguments and set as configuration.
+    GOAL_LATITUDE = args.latitude
+    GOAL_LONGITUDE = args.longitude
 
     conn = MavlinkConnection("tcp:{0}:{1}".format(args.host, args.port), timeout=60)
     drone = MotionPlanning(conn)
